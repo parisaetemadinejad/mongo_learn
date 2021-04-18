@@ -1,7 +1,10 @@
+# The PyMongo library allows interaction with the
+# MongoDB database through Python; it is a native Python driver for MongoDB.
 import pymongo
 
 # create a DB
-my_client = pymongo.MongoClient("mongodb://localhost:27017/")
+my_client = pymongo.MongoClient(host="localhost", port=27017)
+# client = pymongo.MongoClient("mongodb://localhost:27017")
 my_db = my_client["sample_database"]
 # this code print list of DB
 print(my_client.list_database_names())
@@ -34,23 +37,23 @@ else:
 # my note: In MongoDB, a document is not created until it gets content!
 # ---------------------------------------------------------------------
 # we can insert many document to collection
-# my_list = [
-#     {"_id": 1, "name": "John", "address": "Highway 37"},
-#     {"_id": 2, "name": "Peter", "address": "Lowstreet 27"},
-#     {"_id": 3, "name": "Amy", "address": "Apple st 652"},
-#     {"_id": 4, "name": "Hannah", "address": "Mountain 21"},
-#     {"_id": 5, "name": "Michael", "address": "Valley 345"},
-#     {"_id": 6, "name": "Sandy", "address": "Ocean blvd 2"},
-#     {"_id": 7, "name": "Betty", "address": "Green Grass 1"},
-#     {"_id": 8, "name": "Richard", "address": "Sky st 331"},
-#     {"_id": 9, "name": "Susan", "address": "One way 98"},
-#     {"_id": 10, "name": "Vicky", "address": "Yellow Garden 2"},
-#     {"_id": 11, "name": "Ben", "address": "Park Lane 38"},
-#     {"_id": 12, "name": "William", "address": "Central st 954"},
-#     {"_id": 13, "name": "Chuck", "address": "Main Road 989"},
-#     {"_id": 14, "name": "Viola", "address": "Sideway 1633"}
-# ]
-# x = my_col.insert_many(my_list)
+my_list = [
+    {"_id": 1, "name": "John", "address": "Highway 37"},
+    {"_id": 2, "name": "Peter", "address": "Lowstreet 27"},
+    {"_id": 3, "name": "Amy", "address": "Apple st 652"},
+    {"_id": 4, "name": "Hannah", "address": "Mountain 21"},
+    {"_id": 5, "name": "Michael", "address": "Valley 345"},
+    {"_id": 6, "name": "Sandy", "address": "Ocean blvd 2"},
+    {"_id": 7, "name": "Betty", "address": "Green Grass 1"},
+    {"_id": 8, "name": "Richard", "address": "Sky st 331"},
+    {"_id": 9, "name": "Susan", "address": "One way 98"},
+    {"_id": 10, "name": "Vicky", "address": "Yellow Garden 2"},
+    {"_id": 11, "name": "Ben", "address": "Park Lane 38"},
+    {"_id": 12, "name": "William", "address": "Central st 954"},
+    {"_id": 13, "name": "Chuck", "address": "Main Road 989"},
+    {"_id": 14, "name": "Viola", "address": "Sideway 1633"}
+]
+x = my_col.insert_many(my_list)
 
 # print list of the _id values of the inserted documents:
 # print(x.inserted_ids)
@@ -86,3 +89,29 @@ my_doc = my_col.find(my_query)
 for x in my_doc:
     print(x)
 print('------------print a document of collection by filter by regular Expressions ------------')
+my_query = {"address": {"$regex": "^m"}}
+
+my_doc = my_col.find(my_query)
+
+for x in my_doc:
+    print(x)
+print('------------sort by name 1 refer asc and -1 refer desc------------')
+my_doc = my_col.find().sort("name", -1)
+
+for x in my_doc:
+    print(x)
+# The first parameter of the delete_one() method is a query object defining which document to delete.
+# If the query finds more than one document, only the first occurrence is deleted.
+# we write a query and delete base of query
+my_col = my_db["customers"]
+my_query = {"address": "Apple st 652"}
+my_col.delete_one(my_query)
+# we can delete many of row base of query
+my_query = {"address": {"$regex": "^S"}}
+x = my_col.delete_many(my_query)
+print(x.deleted_count, " documents deleted.")
+# delete all document in a collection
+x = my_col.delete_many({})
+print(x.deleted_count, " documents deleted.")
+# we can use drop() method and drop a collection
+my_col.drop()
