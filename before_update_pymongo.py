@@ -6,6 +6,7 @@ import pymongo
 my_client = pymongo.MongoClient(host="localhost", port=27017)
 # client = pymongo.MongoClient("mongodb://localhost:27017")
 my_db = my_client["sample_database"]
+# db = my_client.sample_database
 # this code print list of DB
 print(my_client.list_database_names())
 # this code check if database exist in list of DB
@@ -115,3 +116,4 @@ x = my_col.delete_many({})
 print(x.deleted_count, " documents deleted.")
 # we can use drop() method and drop a collection
 my_col.drop()
+my_client.close()

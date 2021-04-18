@@ -1,3 +1,5 @@
+import pprint
+
 import pymongo
 
 my_client = pymongo.MongoClient("mongodb://localhost:27017/")
@@ -27,7 +29,7 @@ my_col.update_one(my_query, new_values)
 
 # print "customers" after the update:
 for x in my_col.find():
-    print(x)
+    pprint.pprint(x)
 print('--------update many items----------------')
 my_query = {"address": {"$regex": "^S"}}
 new_values = {"$set": {"name": "Minnie"}}
@@ -41,3 +43,10 @@ my_result = my_col.find().limit(3)
 # print the result:
 for x in my_result:
     print(x)
+my_client.close()
+# we can use with statement and we dont use close connection
+# for example
+# with pymongo.MongoClient() as client:
+#     db = client.rptutorials
+#     for doc in db.tutorial.find():
+#         pprint.pprint(doc)
